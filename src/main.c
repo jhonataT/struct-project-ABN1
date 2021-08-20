@@ -5,99 +5,98 @@
 
 typedef struct item
 {
-    int numero;        
-    int peso_aresta;       
+    int number;        
+    int weight_aresta;       
     struct item *prox;  
-    struct item *baixo;
+    struct item *base;
 } item;                
 
 typedef struct
 {
     int quantV;
-    item *inicio;
-} ListaDinamica;  
+    item *start;
+} DynamicList;  
 
 typedef struct fila
 {
-    int numero;
+    int number;
     struct fila *prox;
 } fila;
 
 typedef struct
 {
     int quant;
-    fila *inicio; 
+    fila *start; 
     fila *fim;   
-} FilaDinamica;
+} DynamicQueue;
 
-void prisao(ListaDinamica *L); 
-void CriaLD(ListaDinamica *L); 
-void Free_All(ListaDinamica *L);
-void ImprimeGrafoCompleto(ListaDinamica *L);
-item *NovaAresta(int value, int peso); 
-item *NovoVert(int value); 
-int VerificaAresta(ListaDinamica *L, int v1, int v2, int peso);
-void InserirArestaOrdenado(ListaDinamica *L, item *C, item *V);
-int InserirVertice(ListaDinamica *L, int n);
-void InserirPrimeiroVertice(ListaDinamica *L, item *c);
-void InserirFimVertice(ListaDinamica *L, item *c);
-void InserirVerticeOrdenado(ListaDinamica *L, item *C);
-void MatrizAdjacencia(ListaDinamica *L);
-int **AlocaMatrizDinamica(int l, int c);
-void printaMatriz(int l, int c, int **matriz); 
-void FreeMatrizDinamica(int l, int **M); 
-int buscaLinha(int valor, int l, int c, int **M);
-item *RetornaArestasDadoVertice(ListaDinamica *L, int Vinicio);
-int **BuscaEmLargura(ListaDinamica *L, int Vinicio); 
-int Verifica_e_BuscaLargura(ListaDinamica *L, int Vinicio); 
-int InformaPosicao(ListaDinamica *L, int Vinicio); 
-void InsereFila(FilaDinamica *F, int value);
-int RemoveFila(FilaDinamica *F);
+void prision(DynamicList *L); 
+void CreateDL(DynamicList *L); 
+void Free_All(DynamicList *L);
+void printCompleteGraph(DynamicList *L);
+item *NewEdge(int value, int weight); 
+item *NewVertex(int value); 
+int CheckEdge(DynamicList *L, int v1, int v2, int weight);
+void InsertOrderedEdge(DynamicList *L, item *C, item *V);
+int InsertEdge(DynamicList *L, int n);
+void InsertFirstVertex(DynamicList *L, item *c);
+void InsertEndVertex(DynamicList *L, item *c);
+void InsertEdgeOrdely(DynamicList *L, item *C);
+void AdjacencyMatrix(DynamicList *L);
+int **AllocateDynamicMatrix(int l, int c);
+void ShowMatrix(int l, int c, int **matrix); 
+void FreeDynamicMatrix(int l, int **M); 
+int SearchLine(int value, int l, int c, int **M);
+item *EdgesGivenVertex(DynamicList *L, int Vstart);
+int **BFS(DynamicList *L, int Vstart); 
+int BFS_Verify(DynamicList *L, int Vstart); 
+int InformPosition(DynamicList *L, int Vstart); 
+void InsertQueue(DynamicQueue *F, int value);
+int RemoveQueue(DynamicQueue *F);
 
-int tempo = 0; 
+int time = 0; 
 
 int main(void)
 {
-    int opcao;  
+    int option;  
     int retorno; 
 
-    ListaDinamica Grafo;
-    CriaLD(&Grafo);      
+    DynamicList Graph;
+    CreateDL(&Graph);      
 
-    prisao(&Grafo); 
+    prision(&Graph); 
 
     do 
     {
         printf("\n1. Visualizar Grafo\n");
         printf("2. Converter Grafo para matriz de Adjacencia\n");
-        printf("3. Caminhamento em Amplitude (Busca em Largura)\n4. sair");
-        printf("\nOpcao: ");
-        scanf("%d", &opcao);
+        printf("3. Buscar fuga (Busca em Largura)\n4. sair\n\n");
+        scanf("%d", &option);
 
-        switch (opcao)
+        switch (option)
         {
         case 1: 
         {
-            if (Grafo.quantV == 0)
+            if (Graph.quantV == 0)
             {
                 printf("Grafo Vazio !!!\n");
-            }
+            }   
             else
             {
-                ImprimeGrafoCompleto(&Grafo);
+                printCompleteGraph(&Graph);
             }
             break;
         }
 
         case 2: 
         {
-            if (Grafo.quantV == 0)
+            if (Graph.quantV == 0)
             {
                 printf("Grafo Vazio !!!\n");
             }
             else
             {
-                MatrizAdjacencia(&Grafo);
+                AdjacencyMatrix(&Graph);
             }
             break;
         }
@@ -105,127 +104,119 @@ int main(void)
         case 3: 
         {
             int v1;
-            printf("Informe o vertice de Origem: ");
+            printf("Informe a cela de Origem: ");
             scanf("%d", &v1);
 
-            retorno = Verifica_e_BuscaLargura(&Grafo, v1);
+            retorno = BFS_Verify(&Graph, v1);
 
             if (retorno == -1)
             {
-                printf("ERRO! Nao existe o Vertice %d no Grafo !!!\n", v1);
+                printf("ERRO! Nao existe a cela %d na prisão !!!\n", v1);
             }
             else if (retorno == -2)
             {
-                printf("Grafo Vazio !!!\n");
+                printf("Prisão Vazia !!!\n");
             }
             break;
         }
 
         case 4: 
         {
-            Free_All(&Grafo); 
+            Free_All(&Graph); 
+            system("clear");
+            exit(0);
             break;            
             
         }
 
         default: 
         {
-            printf("Opcao Invalida !!!\n");
+            printf("Opção invalida !!!\n");
             break;
         }
         }
-    } while (opcao != 13); 
+    } while (option != 13); 
     return 0;
 }
 
-
-void prisao(ListaDinamica *L) 
+void prision(DynamicList *L) 
 {
-    InserirVertice(L, 1);
-    InserirVertice(L, 2);
-    InserirVertice(L, 3);
-    InserirVertice(L, 4);
-    InserirVertice(L, 5);
-    InserirVertice(L, 6);
-    InserirVertice(L, 7);
-    InserirVertice(L, 8);
-    InserirVertice(L, 9);
-    InserirVertice(L, 10);
-    InserirVertice(L, 11);
+    InsertEdge(L, 1);
+    InsertEdge(L, 2);
+    InsertEdge(L, 3);
+    InsertEdge(L, 4);
+    InsertEdge(L, 5);
+    InsertEdge(L, 6);
+    InsertEdge(L, 7);
+    InsertEdge(L, 8);
+    InsertEdge(L, 9);
+    InsertEdge(L, 10);
 
-    VerificaAresta(L, 1, 6, 1);
-    VerificaAresta(L, 1, 11, 4);
-    VerificaAresta(L, 2, 11, 4);
-    VerificaAresta(L, 2, 4, 1);
-    VerificaAresta(L, 2, 5, 1);
-    VerificaAresta(L, 2, 6, 1);
-    VerificaAresta(L, 3, 11, 4);
-    VerificaAresta(L, 3, 4, 1);
-    VerificaAresta(L, 4, 2, 1);
-    VerificaAresta(L, 4, 5, 1);
-    VerificaAresta(L, 4, 10, 1);
-    VerificaAresta(L, 5, 2, 1);
-    VerificaAresta(L, 5, 4, 1);
-    VerificaAresta(L, 5, 7, 1);
-    VerificaAresta(L, 5, 9, 1);
-    VerificaAresta(L, 5, 10, 1);
-    VerificaAresta(L, 6, 1, 1);
-    VerificaAresta(L, 6, 2, 1);
-    VerificaAresta(L, 6, 7, 1);
-    VerificaAresta(L, 7, 5, 1);
-    VerificaAresta(L, 7, 6, 1);
-    VerificaAresta(L, 7, 8, 1);
-    VerificaAresta(L, 7, 9, 1);
-    VerificaAresta(L, 8, 11, 4);
-    VerificaAresta(L, 8, 7, 1);
-    VerificaAresta(L, 9, 11, 4);
-    VerificaAresta(L, 9, 5, 1);
-    VerificaAresta(L, 9, 7, 1);
-    VerificaAresta(L, 9, 10, 1);
-    VerificaAresta(L, 10, 11, 4);
-    VerificaAresta(L, 10, 4, 1);
-    VerificaAresta(L, 10, 5, 1);
-    VerificaAresta(L, 10, 9, 1);
+    CheckEdge(L, 1, 6, 1);
+    CheckEdge(L, 2, 4, 1);
+    CheckEdge(L, 2, 5, 1);
+    CheckEdge(L, 2, 6, 1);
+    CheckEdge(L, 3, 4, 1);
+    CheckEdge(L, 4, 2, 1);
+    CheckEdge(L, 4, 5, 1);
+    CheckEdge(L, 4, 10, 1);
+    CheckEdge(L, 5, 2, 1);
+    CheckEdge(L, 5, 4, 1);
+    CheckEdge(L, 5, 7, 1);
+    CheckEdge(L, 5, 9, 1);
+    CheckEdge(L, 5, 10, 1);
+    CheckEdge(L, 6, 1, 1);
+    CheckEdge(L, 6, 2, 1);
+    CheckEdge(L, 6, 7, 1);
+    CheckEdge(L, 7, 5, 1);
+    CheckEdge(L, 7, 6, 1);
+    CheckEdge(L, 7, 8, 1);
+    CheckEdge(L, 7, 9, 1);
+    CheckEdge(L, 8, 7, 1);
+    CheckEdge(L, 9, 5, 1);
+    CheckEdge(L, 9, 7, 1);
+    CheckEdge(L, 9, 10, 1);
+    CheckEdge(L, 10, 4, 1);
+    CheckEdge(L, 10, 5, 1);
+    CheckEdge(L, 10, 9, 1);
 }
 
-void CriaLD(ListaDinamica *L) 
+void CreateDL(DynamicList *L) 
 {
     L->quantV = 0;    
-    L->inicio = NULL; 
+    L->start = NULL; 
 }
 
-void Free_All(ListaDinamica *L) 
+void Free_All(DynamicList *L) 
 {
-    item *AuxV, *AuxA, *InicioA; 
-    while (L->inicio != NULL)    
+    item *AuxV, *AuxA, *startA; 
+    while (L->start != NULL)    
     {
-        AuxV = L->inicio;       
-        InicioA = AuxV->prox;   
-        while (InicioA != NULL) 
+        AuxV = L->start;       
+        startA = AuxV->prox;   
+        while (startA != NULL) 
         {
-            AuxA = InicioA;
-            InicioA = AuxA->prox;
+            AuxA = startA;
+            startA = AuxA->prox;
             free(AuxA); 
             AuxA = NULL;
         }
-        L->inicio = AuxV->baixo;
+        L->start = AuxV->base;
         free(AuxV); 
         AuxV = NULL;
     }
-    
-    
-    
+
 }
 
-void ImprimeGrafoCompleto(ListaDinamica *L) 
+void printCompleteGraph(DynamicList *L) 
 {
-    item *auxV = L->inicio; 
+    item *auxV = L->start; 
     item *auxA;
     printf("Vertices      Arestas\n");
     while (auxV != NULL) 
     {
         auxA = auxV;                             
-        printf("   %2d  ------>", auxV->numero); 
+        printf("   %2d  ------>", auxV->number); 
         if (auxA->prox == NULL)                  
         {
             printf("   NULL\n");
@@ -235,24 +226,17 @@ void ImprimeGrafoCompleto(ListaDinamica *L)
             auxA = auxV->prox;   
             while (auxA != NULL) 
             {
-                printf(" %d ->", auxA->numero);
+                printf(" %d ->", auxA->number);
                 auxA = auxA->prox; 
             }
             printf(" NULL\n");
         }
-        auxV = auxV->baixo; 
+        auxV = auxV->base; 
     }
 }
 
-
-int VerificaAresta(ListaDinamica *L, int v1, int v2, int peso) 
+int CheckEdge(DynamicList *L, int v1, int v2, int weight) 
 {
-    
-    
-    
-    
-    
-
     
     if (L->quantV == 0 || L->quantV == 1)
     {              
@@ -264,32 +248,30 @@ int VerificaAresta(ListaDinamica *L, int v1, int v2, int peso)
         return -3; 
     }
 
-    
-    item *aux = L->inicio; 
+    item *aux = L->start; 
     int cont = 0;          
     while (aux != NULL)
     {
-        if (aux->numero == v1 || aux->numero == v2)
+        if (aux->number == v1 || aux->number == v2)
         {
             cont++; 
         }
-        aux = aux->baixo; 
+        aux = aux->base; 
     }
     if (cont != 2) 
     {
         return -2; 
     }
 
-    
-    aux = L->inicio;          
+    aux = L->start;          
     cont = 0;                 
-    while (aux->numero != v1) 
+    while (aux->number != v1) 
     {                         
-        aux = aux->baixo;
+        aux = aux->base;
     }
     while (aux != NULL) 
     {
-        if (aux->numero == v2) 
+        if (aux->number == v2) 
         {
             cont++; 
         }           
@@ -300,32 +282,27 @@ int VerificaAresta(ListaDinamica *L, int v1, int v2, int peso)
         return -1; 
     }
     
-
-    
-    aux = L->inicio;          
-    while (aux->numero != v1) 
+    aux = L->start;          
+    while (aux->number != v1) 
     {
-        aux = aux->baixo;
+        aux = aux->base;
     }
     item *novo;                  
-    novo = NovaAresta(v2, peso); 
-    InserirArestaOrdenado(L, novo, aux);
+    novo = NewEdge(v2, weight); 
+    InsertOrderedEdge(L, novo, aux);
 
     
-    aux = L->inicio;
-    while (aux->numero != v2)
+    aux = L->start;
+    while (aux->number != v2)
     {
-        aux = aux->baixo;
+        aux = aux->base;
     }
-    novo = NovaAresta(v1, peso);
-    InserirArestaOrdenado(L, novo, aux);
-    
-    
-
+    novo = NewEdge(v1, weight);
+    InsertOrderedEdge(L, novo, aux);
     return 1; 
 }
 
-void InserirArestaOrdenado(ListaDinamica *L, item *C, item *V) 
+void InsertOrderedEdge(DynamicList *L, item *C, item *V) 
 {
     
     if (V->prox == NULL) 
@@ -333,7 +310,7 @@ void InserirArestaOrdenado(ListaDinamica *L, item *C, item *V)
         V->prox = C;
     }
 
-    else if (C->numero < V->prox->numero) 
+    else if (C->number < V->prox->number) 
     {
         C->prox = V->prox;
         V->prox = C;
@@ -342,14 +319,13 @@ void InserirArestaOrdenado(ListaDinamica *L, item *C, item *V)
     else 
     {
         item *auxa = V->prox; 
-        
-
+    
         while (V->prox != NULL) 
         {
             V = V->prox;
         }
 
-        if (C->numero > V->numero) 
+        if (C->number > V->number) 
         {
             V->prox = C; 
         }
@@ -358,7 +334,7 @@ void InserirArestaOrdenado(ListaDinamica *L, item *C, item *V)
         {
             item *auxd;        
             auxd = auxa->prox; 
-            while (auxd->numero < C->numero)
+            while (auxd->number < C->number)
             {
                 auxa = auxa->prox;
                 auxd = auxa->prox;
@@ -369,28 +345,26 @@ void InserirArestaOrdenado(ListaDinamica *L, item *C, item *V)
     }
 }
 
-
-
-void MatrizAdjacencia(ListaDinamica *L) 
+void AdjacencyMatrix(DynamicList *L) 
 {
-    int TamanhoMatriz = L->quantV + 1;
+    int MatrixSize = L->quantV + 1;
     
-    int **MatrizAdj = AlocaMatrizDinamica(TamanhoMatriz, TamanhoMatriz); 
+    int **MatrixAdj = AllocateDynamicMatrix(MatrixSize, MatrixSize); 
     
 
-    item *Aux = L->inicio;
+    item *Aux = L->start;
     int i;
 
-    for (i = 1; i < TamanhoMatriz; i++) 
+    for (i = 1; i < MatrixSize; i++) 
     {                                   
-        MatrizAdj[0][i] = Aux->numero;  
-        MatrizAdj[i][0] = Aux->numero;  
-        Aux = Aux->baixo;               
+        MatrixAdj[0][i] = Aux->number;  
+        MatrixAdj[i][0] = Aux->number;  
+        Aux = Aux->base;               
     }
 
     item *AuxA;      
-    Aux = L->inicio; 
-    int linha = 1, coluna;
+    Aux = L->start; 
+    int line = 1, column;
 
     while (Aux != NULL) 
     {
@@ -399,21 +373,21 @@ void MatrizAdjacencia(ListaDinamica *L)
             AuxA = Aux->prox;    
             while (AuxA != NULL) 
             {
-                coluna = buscaLinha(AuxA->numero, TamanhoMatriz, TamanhoMatriz, MatrizAdj); 
-                MatrizAdj[linha][coluna] = AuxA->peso_aresta;                                  
+                column = SearchLine(AuxA->number, MatrixSize, MatrixSize, MatrixAdj); 
+                MatrixAdj[line][column] = AuxA->weight_aresta;                                  
                 AuxA = AuxA->prox;
             }
         }
-        Aux = Aux->baixo;
-        linha++;
+        Aux = Aux->base;
+        line++;
         
     }
-    printf("\n  Matriz de Adjacencia\n\n");
-    printaMatriz(TamanhoMatriz, TamanhoMatriz, MatrizAdj);
-    FreeMatrizDinamica(TamanhoMatriz, MatrizAdj); 
+    printf("\n  matriz de Adjacencia das celas\n\n");
+    ShowMatrix(MatrixSize, MatrixSize, MatrixAdj);
+    FreeDynamicMatrix(MatrixSize, MatrixAdj); 
 }
 
-int **AlocaMatrizDinamica(int l, int c) 
+int **AllocateDynamicMatrix(int l, int c) 
 {
     int i, j;
     int **m = (int **)malloc(l * sizeof(int *)); 
@@ -429,20 +403,19 @@ int **AlocaMatrizDinamica(int l, int c)
     return m; 
 }
 
-int buscaLinha(int valor, int l, int c, int **M) 
+int SearchLine(int value, int l, int c, int **M) 
 {
     int i;
     for (i = 1; i < l; i++)
     {
-        if (M[i][0] == valor)
+        if (M[i][0] == value)
         {
             return i; 
         }
     }
     return -1; 
 }
-
-void printaMatriz(int l, int c, int **matriz) 
+void ShowMatrix(int l, int c, int **matrix) 
 {
     int i, j;
     for (i = 0; i < l; i++)
@@ -450,13 +423,13 @@ void printaMatriz(int l, int c, int **matriz)
         printf("  ");
         for (j = 0; j < c; j++)
         {
-            printf("%2d ", matriz[i][j]); 
+            printf("%2d ", matrix[i][j]); 
         }
         printf("\n");
     }
 }
 
-void FreeMatrizDinamica(int l, int **M) 
+void FreeDynamicMatrix(int l, int **M) 
 {
     int i;
     for (i = 0; i < l; i++)
@@ -468,23 +441,23 @@ void FreeMatrizDinamica(int l, int **M)
 }
 
 
-int Verifica_e_BuscaLargura(ListaDinamica *L, int Vinicio) 
+int BFS_Verify(DynamicList *L, int Vstart) 
 {
     if (L->quantV == 0)
     {
         return -2; 
     }
 
-    item *aux = L->inicio;
+    item *aux = L->start;
     int cont = 0;
     while (aux != NULL)
     {
-        if (aux->numero == Vinicio)
+        if (aux->number == Vstart)
         {
             cont++;
             break; 
         }
-        aux = aux->baixo; 
+        aux = aux->base; 
     }
 
     if (cont == 0) 
@@ -492,97 +465,84 @@ int Verifica_e_BuscaLargura(ListaDinamica *L, int Vinicio)
         return -1; 
     }
 
-    
-
     int **retorno; 
-    retorno = BuscaEmLargura(L, Vinicio);
+    retorno = BFS(L, Vstart);
 
-    FreeMatrizDinamica(3, retorno);
+    FreeDynamicMatrix(3, retorno);
     retorno = NULL;
     return 0;
 }
 
-int **BuscaEmLargura(ListaDinamica *L, int Vinicio) 
+int **BFS(DynamicList *L, int Vstart) 
 {
     int arrVerify[10] = {0};
-    arrVerify[0] = Vinicio;
-    int tamGrafo = L->quantV; 
+    arrVerify[0] = Vstart;
+    int tamGraph = L->quantV; 
 
-    int **matriz = AlocaMatrizDinamica(3, tamGrafo); 
+    int **matrix = AllocateDynamicMatrix(3, tamGraph); 
     int i;
-    for (i = 0; i < tamGrafo; i++) 
+    for (i = 0; i < tamGraph; i++) 
     {
         if(i == 10){
-            matriz[2][i] = 1;
+            matrix[2][i] = 1;
             continue;
         }
 
-        matriz[1][i] = -1; 
-        matriz[0][i] = -1; 
-        matriz[2][i] = 0;  
-                           
-                           
-                           
-                           
+        matrix[1][i] = -1; 
+        matrix[0][i] = -1; 
+        matrix[2][i] = 0;                       
     }
 
-    
-    
-    
-    
+    int position = InformPosition(L, Vstart); 
 
-    int posicao = InformaPosicao(L, Vinicio); 
+    matrix[1][position] = -1;
+    matrix[0][position] = 0;
+    matrix[2][position] = 1;
 
-    
-    matriz[1][posicao] = -1;
-    matriz[0][posicao] = 0;
-    matriz[2][posicao] = 1;
-
-    FilaDinamica Q; 
+    DynamicQueue Q; 
     Q.quant = 0;
-    Q.inicio = NULL;
+    Q.start = NULL;
     Q.fim = NULL;
-
-    InsereFila(&Q, Vinicio); 
+    InsertQueue(&Q, Vstart); 
 
     int u, v;
     int posu, posv; 
     item *aux;
     while (Q.quant != 0) 
     {
-        u = RemoveFila(&Q);
-        posu = InformaPosicao(L, u);
-        aux = RetornaArestasDadoVertice(L, u); 
+        u = RemoveQueue(&Q);
+        posu = InformPosition(L, u);
+        aux = EdgesGivenVertex(L, u); 
         while (aux != NULL)                    
         {
-            v = aux->numero;
-            posv = InformaPosicao(L, v);
-            if (matriz[2][posv] == 0 || matriz[2][posv] == 3)
+            v = aux->number;
+            posv = InformPosition(L, v);
+            if (matrix[2][posv] == 0 || matrix[2][posv] == 3)
             {
                 for(int i = 0; i < 10; i ++){
                     if(arrVerify[i] == 0){
-                        arrVerify[i] = aux->numero;
+                        arrVerify[i] = aux->number;
                         break;
                     }
                 }
-                matriz[2][posv] = 3;
-                matriz[0][posu] + 1;
-                matriz[0][posv] = matriz[0][posu] + 1;
-                matriz[1][posv] = u;
-                InsereFila(&Q, v);
+                matrix[2][posv] = 3;
+                matrix[0][posu] + 1;
+                matrix[0][posv] = matrix[0][posu] + 1;
+                matrix[1][posv] = u;
+                InsertQueue(&Q, v);
             }
-            matriz[2][posu] = 2;
+            matrix[2][posu] = 2;
             aux = aux->prox;
         }
     }
 
-    aux = L->inicio;
+    aux = L->start;
     printf("\n BUSCA EM LARGURA");
-    printf("\n Vertice   d   Pai   Cor\n");
-    for (i = 0; i < tamGrafo; i++)
+    printf("\n  celas    p   acesso\n");
+    for (i = 0; i < tamGraph; i++)
     {
-        printf("   %2d     %2d   %2d   %2d\n", aux->numero, matriz[0][i], matriz[1][i], matriz[2][i]); 
-        aux = aux->baixo;
+        printf("   %2d     %2d   %2d\n", aux->number, matrix[0][i], matrix[1][i]); 
+        aux = aux->base;
     }
     int count = 0;
     for(int i = 0; i < 10; i ++){
@@ -590,48 +550,45 @@ int **BuscaEmLargura(ListaDinamica *L, int Vinicio)
             ++count;
         }
     }
-    printf("TAMANHO: %d\n", count);
-    printf("\nOBS: Se (d) tiver um (-1) quer dizer que o Grafo nao e conexo !!!\n");
-    printf("OBS: Se pai tiver mais que um (-1) quer dizer que o Grafo nao e conexo !!!\n");
-    printf("OBS: Pai igual (-1) quer dizer que nao existe.\n");
+    printf("Total de portões quebrados: %d\n", count);
 
-    return matriz;
+    return matrix;
 }
 
-item *RetornaArestasDadoVertice(ListaDinamica *L, int Vinicio) 
+item *EdgesGivenVertex(DynamicList *L, int Vstart) 
 {
-    item *Aux = L->inicio;
-    while (Aux->numero != Vinicio) 
+    item *Aux = L->start;
+    while (Aux->number != Vstart) 
     {
-        Aux = Aux->baixo;
+        Aux = Aux->base;
     }
     return Aux->prox; 
 }
 
-int InformaPosicao(ListaDinamica *L, int Vinicio) 
+int InformPosition(DynamicList *L, int Vstart) 
 {
-    item *aux = L->inicio;
+    item *aux = L->start;
     int cont = 0;
     
-    while (aux->numero != Vinicio)
+    while (aux->number != Vstart)
     { 
         cont++;
-        aux = aux->baixo;
+        aux = aux->base;
     }
     return cont; 
 }
 
-void InsereFila(FilaDinamica *F, int value)
+void InsertQueue(DynamicQueue *F, int value)
 {
     
     fila *aux;
     aux = malloc(sizeof(fila)); 
-    aux->numero = value;        
+    aux->number = value;        
     aux->prox = NULL;           
 
     if (F->quant == 0) 
     {
-        F->inicio = aux;
+        F->start = aux;
         F->fim = aux;
     }
     else 
@@ -641,147 +598,141 @@ void InsereFila(FilaDinamica *F, int value)
     }
     F->quant++;
 }
-
-int RemoveFila(FilaDinamica *F)
+int RemoveQueue(DynamicQueue *F)
 {
-    int valor;         
+    int value;         
     if (F->quant != 0) 
     {
-        valor = F->inicio->numero; 
+        value = F->start->number; 
         fila *aux;
         if (F->quant == 1) 
         {
-            aux = F->inicio;
+            aux = F->start;
             free(aux);
             aux = NULL;
             
             F->quant = 0;
-            F->inicio = NULL;
+            F->start = NULL;
             F->fim = NULL;
         }
         else 
         {
-            aux = F->inicio;       
-            F->inicio = aux->prox; 
+            aux = F->start;       
+            F->start = aux->prox; 
             free(aux);
             aux = NULL;
             F->quant--;
         }
     }
-    return valor; 
+    return value; 
 }
 
-
-int InserirVertice(ListaDinamica *L, int n) 
+int InsertEdge(DynamicList *L, int n) 
 {                                           
-    
-    
-
     
     item *aux;          
     if (L->quantV != 0) 
     {                   
         int i;
-        aux = L->inicio;                
+        aux = L->start;                
         for (i = 0; i < L->quantV; i++) 
         {
-            if (aux->numero == n) 
+            if (aux->number == n) 
             {
                 return -1;
             }
-            aux = aux->baixo; 
+            aux = aux->base; 
         }
     }
     
-
-    aux = NovoVert(n);              
-    InserirVerticeOrdenado(L, aux); 
+    aux = NewVertex(n);              
+    InsertEdgeOrdely(L, aux); 
     return 1;                       
 }
 
-void InserirPrimeiroVertice(ListaDinamica *L, item *c) 
+void InsertFirstVertex(DynamicList *L, item *c) 
 {
     L->quantV++; 
-    c->baixo = L->inicio;
-    L->inicio = c; 
+    c->base = L->start;
+    L->start = c; 
 }
 
-void InserirFimVertice(ListaDinamica *L, item *c) 
+void InsertEndVertex(DynamicList *L, item *c) 
 {
     
     int pos = L->quantV; 
     int cont = 0;
-    item *aux = L->inicio;   
+    item *aux = L->start;   
     while (cont < (pos - 1)) 
     {
-        aux = aux->baixo;
+        aux = aux->base;
         cont++;
     }
-    c->baixo = aux->baixo;
-    aux->baixo = c;
+    c->base = aux->base;
+    aux->base = c;
     L->quantV++;
 }
 
-void InserirVerticeOrdenado(ListaDinamica *L, item *C) 
+void InsertEdgeOrdely(DynamicList *L, item *C) 
 {
-    item *aux = L->inicio; 
+    item *aux = L->start; 
     if (L->quantV != 0)    
     {
-        while (aux->baixo != NULL) 
+        while (aux->base != NULL) 
         {
-            aux = aux->baixo;
+            aux = aux->base;
         }
     } 
 
-    if (L->inicio == NULL) 
+    if (L->start == NULL) 
     {
-        InserirPrimeiroVertice(L, C);
+        InsertFirstVertex(L, C);
     }
 
-    else if (C->numero < L->inicio->numero) 
+    else if (C->number < L->start->number) 
     {
-        InserirPrimeiroVertice(L, C);
+        InsertFirstVertex(L, C);
     }
 
-    else if (C->numero > aux->numero) 
+    else if (C->number > aux->number) 
     {
-        InserirFimVertice(L, C);
+        InsertEndVertex(L, C);
     }
 
     else 
     {
         item *auxa, *auxd; 
-        auxa = L->inicio;
-        auxd = auxa->baixo;
-        while (auxd->numero < C->numero)
+        auxa = L->start;
+        auxd = auxa->base;
+        while (auxd->number < C->number)
         {
-            auxa = auxa->baixo;
-            auxd = auxa->baixo;
+            auxa = auxa->base;
+            auxd = auxa->base;
         }
-        C->baixo = auxa->baixo;
-        auxa->baixo = C;
+        C->base = auxa->base;
+        auxa->base = C;
         L->quantV++;
     }
 }
 
-item *NovoVert(int value) 
+item *NewVertex(int value) 
 {
     item *aux;
     aux = malloc(sizeof(item)); 
-    aux->numero = value;        
-    aux->peso_aresta = -1;         
+    aux->number = value;        
+    aux->weight_aresta = -1;         
     aux->prox = NULL;           
-    aux->baixo = NULL;          
+    aux->base = NULL;          
     return aux;
 }
 
-item *NovaAresta(int value, int peso) 
+item *NewEdge(int value, int weight) 
 {
     item *aux;
     aux = malloc(sizeof(item)); 
-    aux->numero = value;        
-    aux->peso_aresta = peso;      
+    aux->number = value;        
+    aux->weight_aresta = weight;      
     aux->prox = NULL;           
-    aux->baixo = NULL;          
+    aux->base = NULL;          
     return aux;
 }
