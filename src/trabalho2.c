@@ -35,7 +35,7 @@ typedef struct
 } FilaDinamica;
 
 // ===========================CABEÇALHOS========================================
-void FuncaoTeste(ListaDinamica *L);
+void prisao(ListaDinamica *L);
 void CriaLD(ListaDinamica *L);
 void Free_All(ListaDinamica *L);
 void ImprimeGrafoCompleto(ListaDinamica *L);
@@ -88,7 +88,7 @@ int main(void)
 
     // ====================================== TIRAR DEPOIS ===========================================
 
-    FuncaoTeste(&Grafo); //<<-- DESCOMENTAR AQUI !!!!
+    prisao(&Grafo); //<<-- DESCOMENTAR AQUI !!!!
                          // OBS: v = malloc (100 * sizeof (int)); == int v[100];
 
     do // Responsavel por deixar o MENU em LOOP até o usuario informar "SAIR"
@@ -373,7 +373,7 @@ int main(void)
 }
 
 // ============================================ FUNÇOES DIVERSAS ===========================================
-void FuncaoTeste(ListaDinamica *L) // Função usada na "main"
+void prisao(ListaDinamica *L) // Função usada na "main"
 {
     // TESTE DO TRABALHO 2 ...
     InserirVertice(L, 1);
@@ -1111,12 +1111,10 @@ int **BuscaEmLargura(ListaDinamica *L, int Vinicio) // Função usada em "Verifi
 
     //  EXPLICAÇÃO DA FUNÇÃO INFORMA POSIÇÃO ...
     // 	O vetor pi/d/cor começa no indice 0 e vai até Quantidade de Vertices do Grafo -1 ...
-    // 	Sabemos que o vetor dinamico e o Grafo tem o mesmo tamanho ... então estou procurando o indice do vertice
-    // do grafo no vetor dinamico ...
-    // 	Tambem preciso fazer isso pois não necessariamente meu Grafo tem vertices consecutivos (1,2,3,4,...), então
-    // preciso achar o indice X do Vertice.
+    // 	Sabemos que o vetor dinamico e o Grafo tem o mesmo tamanho ... então estou procurando o indice do vertice do grafo no vetor dinamico ...
+    // 	Tambem preciso fazer isso pois não necessariamente meu Grafo tem vertices consecutivos (1,2,3,4,...), então preciso achar o indice X do Vertice.
 
-    int posicao = InformaPosicao(L, Vinicio); // Explicado em cima ...
+    int posicao = InformaPosicao(L, Vinicio); // Explicado acima ...
 
     // Estou setando o pi/d/cor do Vertice inicio que o usuario informou ...
     matriz[1][posicao] = -1;

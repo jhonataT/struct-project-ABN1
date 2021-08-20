@@ -1,25 +1,22 @@
 #include <stdio.h>
-#include <stdlib.h> // biblioteca Responsavel por incluir switch case e malloc
+#include <stdlib.h> 
 
-// SETAR AQUI um numero maior que o Peso Das Arestas
-#define MAX 1000 // MAX é para o valor infinito que vai nas funções!!
+#define MAX 1000 
 
-// ============================ ESTRUTURA PARA O GRAFO =======================
 typedef struct item
 {
-    int numero;         // valor vertice (ID)
-    int P_Aresta;       // Valor do Peso da Aresta (ID ARESTA)
-    struct item *prox;  // arestas
-    struct item *baixo; // vertices
-} item;                 // estrutura que corresponde a cada Vertice/Aresta do Grafo
+    int numero;        
+    int peso_aresta;       
+    struct item *prox;  
+    struct item *baixo;
+} item;                
 
 typedef struct
 {
-    int quantV;   // Quantidade de Vertices
-    item *inicio; // Inicio --> Onde começa o 1 vertice
-} ListaDinamica;  // Grafo --> ListaDinamica
+    int quantV;
+    item *inicio;
+} ListaDinamica;  
 
-// ============================ ESTRUTURA PARA FILA =======================
 typedef struct fila
 {
     int numero;
@@ -29,78 +26,57 @@ typedef struct fila
 typedef struct
 {
     int quant;
-    fila *inicio; // Remove no INICIO
-    fila *fim;    // Insere no FIM
+    fila *inicio; 
+    fila *fim;   
 } FilaDinamica;
 
-// ===========================CABEÇALHOS========================================
-void FuncaoTeste(ListaDinamica *L); // *
-void CriaLD(ListaDinamica *L); // *
-void Free_All(ListaDinamica *L); // *
-void ImprimeGrafoCompleto(ListaDinamica *L); // *
-item *NovaAresta(int value, int peso); // *
-item *NovoVert(int value); // *
-item *RetornaItemAnterior(ListaDinamica *L, int v1);
-int VerificaRemoveVertices(ListaDinamica *L, int v1);
-int VerificaRemoveArestas(ListaDinamica *L, int v1, int v2);
+void prisao(ListaDinamica *L); 
+void CriaLD(ListaDinamica *L); 
+void Free_All(ListaDinamica *L);
+void ImprimeGrafoCompleto(ListaDinamica *L);
+item *NovaAresta(int value, int peso); 
+item *NovoVert(int value); 
 int VerificaAresta(ListaDinamica *L, int v1, int v2, int peso);
 void InserirArestaOrdenado(ListaDinamica *L, item *C, item *V);
 int InserirVertice(ListaDinamica *L, int n);
 void InserirPrimeiroVertice(ListaDinamica *L, item *c);
 void InserirFimVertice(ListaDinamica *L, item *c);
 void InserirVerticeOrdenado(ListaDinamica *L, item *C);
-void RemoveAresta(ListaDinamica *Lista, item *V, int n);
-int InformaGrauVertice(ListaDinamica *L, int V);
 void MatrizAdjacencia(ListaDinamica *L);
-int **AlocaMatrizDinamica(int l, int c); // *
-void printaMatriz(int l, int c, int **matriz); // *
-void FreeMatrizDinamica(int l, int **M); // *
+int **AlocaMatrizDinamica(int l, int c);
+void printaMatriz(int l, int c, int **matriz); 
+void FreeMatrizDinamica(int l, int **M); 
 int buscaLinha(int valor, int l, int c, int **M);
 item *RetornaArestasDadoVertice(ListaDinamica *L, int Vinicio);
-int **BuscaEmLargura(ListaDinamica *L, int Vinicio); // *
-int Verifica_e_BuscaLargura(ListaDinamica *L, int Vinicio); // *
-int InformaPosicao(ListaDinamica *L, int Vinicio); //*
+int **BuscaEmLargura(ListaDinamica *L, int Vinicio); 
+int Verifica_e_BuscaLargura(ListaDinamica *L, int Vinicio); 
+int InformaPosicao(ListaDinamica *L, int Vinicio); 
 void InsereFila(FilaDinamica *F, int value);
 int RemoveFila(FilaDinamica *F);
-int VerificaGrafoConexo(ListaDinamica *L);
-int BuscaEmProfundidade(ListaDinamica *L);
-void DFS_VISIT(int **M, int u, ListaDinamica *L);
-int AlgoritmoPrim(ListaDinamica *L, int Vinicio);
-int Extract_MIN(FilaDinamica *F, int **Key);
-int Informa_Numero_Esta_Fila(FilaDinamica *F, int numero);
-void printaFila(FilaDinamica *F); // teste
-int **Initialize_Single_Source(ListaDinamica *L, int Vinicio);
-void Relax(ListaDinamica *L, int u, int v, int **Matriz);
-int Extract_MIN_Dijkstra(FilaDinamica *F, int **Matriz);
-// =============================================================================
 
-int tempo = 0; // usada na função "DFS_VISIT"
+int tempo = 0; 
 
 int main(void)
 {
-    int opcao;   // Variavel para escolher opcoes do MENU
-    int retorno; // Variavel usada para receber retorno das funcoes
+    int opcao;  
+    int retorno; 
 
-    ListaDinamica Grafo; // Criando uma Lista Dinamica com o Nome GRAFO
-    CriaLD(&Grafo);      // Setando Quantidade e Ponteiro Inicio para NULL
+    ListaDinamica Grafo;
+    CriaLD(&Grafo);      
 
-    // ====================================== TIRAR DEPOIS ===========================================
+    prisao(&Grafo); 
 
-    FuncaoTeste(&Grafo); //<<-- DESCOMENTAR AQUI !!!!
-                         // OBS: v = malloc (100 * sizeof (int)); == int v[100];
-
-    do // Responsavel por deixar o MENU em LOOP até o usuario informar "SAIR"
+    do 
     {
-        printf("\n3.  Visualizar Grafo\n");
-        // printf("4.  Remover Vertices\n5.  Remover Arestas\n6.  Informar grau de um vertice\n");
-        printf("8. Converter Grafo para matriz de Adjacencia\n");
-        printf("9.  Caminhamento em Amplitude (Busca em Largura)\n13. sair");
+        printf("\n1. Visualizar Grafo\n");
+        printf("2. Converter Grafo para matriz de Adjacencia\n");
+        printf("3. Caminhamento em Amplitude (Busca em Largura)\n4. sair");
         printf("\nOpcao: ");
         scanf("%d", &opcao);
 
         switch (opcao)
         {
-        case 3: // Visualizar Grafo
+        case 1: 
         {
             if (Grafo.quantV == 0)
             {
@@ -113,7 +89,7 @@ int main(void)
             break;
         }
 
-        case 8: // Converter grafo para Matriz de Adjacencia
+        case 2: 
         {
             if (Grafo.quantV == 0)
             {
@@ -126,7 +102,7 @@ int main(void)
             break;
         }
 
-        case 9: // Caminhamento em Amplitude (Busca em Largura)
+        case 3: 
         {
             int v1;
             printf("Informe o vertice de Origem: ");
@@ -145,27 +121,26 @@ int main(void)
             break;
         }
 
-        case 13: // Sair
+        case 4: 
         {
-            Free_All(&Grafo); // Antes de sair ele vai dar free no Grafo inteiro (Vertices e Arestas)
-            break;            // eu poderia chamar o retira vertice e tirar todos os vertices do grafo mas eu queria fazer
-            // a função free all para "treinar"
+            Free_All(&Grafo); 
+            break;            
+            
         }
 
-        default: // Se Usuario informou numero != de [1-13] ~~ Opção Invalida
+        default: 
         {
             printf("Opcao Invalida !!!\n");
             break;
         }
         }
-    } while (opcao != 13); // Se Opção for 13 ele sai do laço e "fecha" o programa
+    } while (opcao != 13); 
     return 0;
 }
 
-// ============================================ FUNÇOES DIVERSAS ===========================================
-void FuncaoTeste(ListaDinamica *L) // Função usada na "main"
+
+void prisao(ListaDinamica *L) 
 {
-    // TESTE DO TRABALHO 2 ...
     InserirVertice(L, 1);
     InserirVertice(L, 2);
     InserirVertice(L, 3);
@@ -176,7 +151,7 @@ void FuncaoTeste(ListaDinamica *L) // Função usada na "main"
     InserirVertice(L, 8);
     InserirVertice(L, 9);
     InserirVertice(L, 10);
-    // InserirVertice(L, 11);
+    InserirVertice(L, 11);
 
     VerificaAresta(L, 1, 6, 1);
     VerificaAresta(L, 1, 11, 4);
@@ -213,130 +188,130 @@ void FuncaoTeste(ListaDinamica *L) // Função usada na "main"
     VerificaAresta(L, 10, 9, 1);
 }
 
-void CriaLD(ListaDinamica *L) // Função usada na "main"
+void CriaLD(ListaDinamica *L) 
 {
-    L->quantV = 0;    // Setando Quantidade de Vertices do Grafo em zero
-    L->inicio = NULL; // atualizando ponteiro Inicio para NULL
+    L->quantV = 0;    
+    L->inicio = NULL; 
 }
 
-void Free_All(ListaDinamica *L) // Função usada na "main"
+void Free_All(ListaDinamica *L) 
 {
-    item *AuxV, *AuxA, *InicioA; // Ponteiro inicioA é para criar um Inicio para Arestas
-    while (L->inicio != NULL)    // Loop responsavel por dar free em todos os vertices do grafo
+    item *AuxV, *AuxA, *InicioA; 
+    while (L->inicio != NULL)    
     {
-        AuxV = L->inicio;       // Enquanto L->inicio é != de NULL então tem item para dar free
-        InicioA = AuxV->prox;   // Inicio de Aresta sempre começa no AuxV->prox;
-        while (InicioA != NULL) // começa aqui para dar free nas arestas
+        AuxV = L->inicio;       
+        InicioA = AuxV->prox;   
+        while (InicioA != NULL) 
         {
             AuxA = InicioA;
             InicioA = AuxA->prox;
-            free(AuxA); // free na aresta
+            free(AuxA); 
             AuxA = NULL;
         }
         L->inicio = AuxV->baixo;
-        free(AuxV); // free no vertice
+        free(AuxV); 
         AuxV = NULL;
     }
-    // \/ NÂO PRECISA FAZER ISSO PORQUE MEU GRAFO NÃO É CRIADO COM MALLOC E SIM POR TIPO
-    //free(L); // dando free na estrutura grafo
-    //L = NULL;
+    
+    
+    
 }
 
-void ImprimeGrafoCompleto(ListaDinamica *L) // Função usada na "main" case 3
+void ImprimeGrafoCompleto(ListaDinamica *L) 
 {
-    item *auxV = L->inicio; // Criando tipo item V para vertice e itemA para aresta.
+    item *auxV = L->inicio; 
     item *auxA;
     printf("Vertices      Arestas\n");
-    while (auxV != NULL) // Vai terminar de printar o grafo quando chegar no ultimo vertice
+    while (auxV != NULL) 
     {
-        auxA = auxV;                             // auxA precisa receber auxV para o auxA sempre printar os itens da sua linha
-        printf("   %2d  ------>", auxV->numero); // Printando o Vertice
-        if (auxA->prox == NULL)                  // Se o proximo item de Vertice for NULL ele vai printar um NULL
+        auxA = auxV;                             
+        printf("   %2d  ------>", auxV->numero); 
+        if (auxA->prox == NULL)                  
         {
             printf("   NULL\n");
         }
-        else // Se não for NULL quer dizer que tem itens prox de Vertice ...
+        else 
         {
-            auxA = auxV->prox;   // Precisa fazer isso porque senão ele vai printar o Vertice de novo ... A aresta sempre começa do V->prox; e não de V.
-            while (auxA != NULL) // Imprimir todos da Lista (Aresta)
+            auxA = auxV->prox;   
+            while (auxA != NULL) 
             {
                 printf(" %d ->", auxA->numero);
-                auxA = auxA->prox; // Percorrendo Lista na Horizontal (Printando todas as Arestas) do vertice V
+                auxA = auxA->prox; 
             }
             printf(" NULL\n");
         }
-        auxV = auxV->baixo; // Para Percorrer até o ultimo Vertice da lista
+        auxV = auxV->baixo; 
     }
 }
 
-// ===================================== FUNÇOES PARA ARESTAS ===============================================
-int VerificaAresta(ListaDinamica *L, int v1, int v2, int peso) // Função usada na "main"
+
+int VerificaAresta(ListaDinamica *L, int v1, int v2, int peso) 
 {
-    // CHECKLIST DE VERIFICAÇÃO DE ARESTAS                                          STATUS     RETURN
-    //      * V1 E V2 PRECISA SER DIFERENTE --> NÃO PODE TER LAÇO                    OK!        (-3)
-    //      * PRECISA TER NO MINIMO 2 VERTICES NO GRAFO --> NÃO PODE TER LAÇO        OK!        (-4)
-    //      * VERIFICAR SE V1 E V2 PERTENCEM AO GRAFO                                OK!        (-2)
-    //      * VERIFICAR SE JA EXISTE ARESTA LIGANDO V1 E V2                          OK!        (-1)
+    
+    
+    
+    
+    
 
-    // --> COMEÇA AQUI A PARTE DE VERIFICAÇÂO ...
+    
     if (L->quantV == 0 || L->quantV == 1)
-    {              // Não tem como juntar 2 pontos sem ter dois pontos (trabalho não aceita laço)
-        return -4; // Saida (-4) quer dizer que tem vertices insuficientes para criar aresta
+    {              
+        return -4; 
     }
 
-    if (v1 == v2) // Não pode ter laço
+    if (v1 == v2) 
     {
-        return -3; // Saida (-3) quer dizer que V1 é igual a V2.
+        return -3; 
     }
 
-    // Verificar se existe no Grafo os Vertices V1 e V2 ...
-    item *aux = L->inicio; // Criando tipo item e setando para começo do Grafo
-    int cont = 0;          // Inicializando uma variavel contadora = 0 ... vai ser responsavel por contar se tem os V1 e V2
+    
+    item *aux = L->inicio; 
+    int cont = 0;          
     while (aux != NULL)
     {
         if (aux->numero == v1 || aux->numero == v2)
         {
-            cont++; // Se cair aqui 2x é porque o V1 e V2 existe na lista se cair 1 ou nenhuma vez é pq n tem
+            cont++; 
         }
-        aux = aux->baixo; // Percorrendo grafo na vertical até Aux ser NULL
+        aux = aux->baixo; 
     }
-    if (cont != 2) // Se for igual a 2 é porque o V1^V2 existe no Grafo, se for diferente não existe.
+    if (cont != 2) 
     {
-        return -2; // Saida (-2) quer dizer que não tem V1 ou V2 no Grafo ou nenhum deles.
+        return -2; 
     }
 
-    // Verificar Se já existe essa aresta no Grafo
-    aux = L->inicio;          // Setando novamente Aux para inicio do Grafo
-    cont = 0;                 // Setando novamente contador = 0 para validar return
-    while (aux->numero != v1) // ele vai percorrer o gravo na Vertical(vertice) até achar o v1
-    {                         // Ele vai achar o v1 pois ja foi verificado que v1 e v2 pertencem ao grafo
+    
+    aux = L->inicio;          
+    cont = 0;                 
+    while (aux->numero != v1) 
+    {                         
         aux = aux->baixo;
     }
-    while (aux != NULL) // Agora o aux vai percorrer o gravo na Horizontal (Arestas).
+    while (aux != NULL) 
     {
-        if (aux->numero == v2) // Se ele achar o v2 é porque ja tem aresta ligando os pontos v1 e v2
+        if (aux->numero == v2) 
         {
-            cont++; // Se cair aqui é porque ja tem arestas ligando, então para validar uma saida o cont recebe 1;
-        }           // Se cont=0 --> Não existe aresta ligando v1 e v2 | Se cont != 0 é porque existe aresta ligando V1 e V2
+            cont++; 
+        }           
         aux = aux->prox;
     }
     if (cont != 0)
     {
-        return -1; // Saida (-1) quer dizer que já existe aresta ligando os pontos V1 e V2
+        return -1; 
     }
-    // --> TERMINA AQUI A PARTE DE VERIFICAÇÂO ...
+    
 
-    // ~~~~~~~~~~~~~~       &*&*    PARTE QUE VAI ADICIONAR ARESTAS    &*&*         ~~~~~~~~~~~~~
-    aux = L->inicio;          // setando novamente aux para inicio do Grafo
-    while (aux->numero != v1) // Vai percorrer a lista até achar o Vertice V1
+    
+    aux = L->inicio;          
+    while (aux->numero != v1) 
     {
         aux = aux->baixo;
     }
-    item *novo;                  // declarando tipo item para inserir no v1 a aresta v2
-    novo = NovaAresta(v2, peso); // Chamando função para criar nova aresta
+    item *novo;                  
+    novo = NovaAresta(v2, peso); 
     InserirArestaOrdenado(L, novo, aux);
 
-    // Precisamos fazer isso 2x ... um para inserir no v1 a aresta v2 e no outro inserir no v2 a aresta v1.
+    
     aux = L->inicio;
     while (aux->numero != v2)
     {
@@ -344,45 +319,45 @@ int VerificaAresta(ListaDinamica *L, int v1, int v2, int peso) // Função usada
     }
     novo = NovaAresta(v1, peso);
     InserirArestaOrdenado(L, novo, aux);
-    // Chamando função para inserir ... onde novo é o elemento a ser inserido e aux é onde a lista começa
-    // horizontalmente (aresta) em v1
+    
+    
 
-    return 1; // Se chegou aqui porque não parou em nenhum return e conseguiu analisar e inserir com sucesso !!!
+    return 1; 
 }
 
-void InserirArestaOrdenado(ListaDinamica *L, item *C, item *V) // Função usada em "VerificaAresta
+void InserirArestaOrdenado(ListaDinamica *L, item *C, item *V) 
 {
-    // Item C --> item que vc quer inserir || Item V é o Vertice Atual, isto é, o vertice que tu quer inserir a aresta
-    if (V->prox == NULL) // Se não tem arestas ... Basta atualizar ponteiro prox para o item novo
+    
+    if (V->prox == NULL) 
     {
         V->prox = C;
     }
 
-    else if (C->numero < V->prox->numero) // Se o numero que vc vai inserir é menor que o primeiro numero da aresta
+    else if (C->numero < V->prox->numero) 
     {
         C->prox = V->prox;
         V->prox = C;
     }
 
-    else // Inserir no FIM da lista (aresta) e no meio
+    else 
     {
-        item *auxa = V->prox; // só vai precisar disso se cair no else, mas como eu vou percorrer o V
-        //vou perder referencia, então fiz uma "copia" dele aqui.
+        item *auxa = V->prox; 
+        
 
-        while (V->prox != NULL) // Estou percorrendo a lista até o ultimo item para verificar a condição abaixo
+        while (V->prox != NULL) 
         {
             V = V->prox;
         }
 
-        if (C->numero > V->numero) // Se o ultimo item da lista é MENOR que o C ... INSERIR NO FIM da lista
+        if (C->numero > V->numero) 
         {
-            V->prox = C; // Inserir FIM basta atualizar o ponteiro prox do ultimo elemento para C
+            V->prox = C; 
         }
 
-        else // CASO DO MEIO ... vou precisar usar o auxa (aux antes)
+        else 
         {
-            item *auxd;        // auxiliar depois
-            auxd = auxa->prox; // aux depois vai receber o prox de antes ... para comparar.
+            item *auxd;        
+            auxd = auxa->prox; 
             while (auxd->numero < C->numero)
             {
                 auxa = auxa->prox;
@@ -395,89 +370,79 @@ void InserirArestaOrdenado(ListaDinamica *L, item *C, item *V) // Função usada
 }
 
 
-// =================================== FUNÇOES PARA MATRIZ ADJ ===============================================
-void MatrizAdjacencia(ListaDinamica *L) // Função usada na "Main"
+
+void MatrizAdjacencia(ListaDinamica *L) 
 {
     int TamanhoMatriz = L->quantV + 1;
-    // mais um por causa Dos Indices que vão ficar em cima/lado da matriz
-    int **MatrizAdj = AlocaMatrizDinamica(TamanhoMatriz, TamanhoMatriz); // Criando matriz Adjacencia
-    // Chamando função que cria e zera a matriz dinamica
+    
+    int **MatrizAdj = AlocaMatrizDinamica(TamanhoMatriz, TamanhoMatriz); 
+    
 
     item *Aux = L->inicio;
     int i;
 
-    for (i = 1; i < TamanhoMatriz; i++) // começa em 1 porque em 0 é os indices que ficam FIXO
-    {                                   // For para inserir os Vertices da Matriz ...
-        MatrizAdj[0][i] = Aux->numero;  // Preenchendo as colunas com os vertices do Grafo
-        MatrizAdj[i][0] = Aux->numero;  // Preenchendo as linhas com os vertices do Grafo
-        Aux = Aux->baixo;               // Percorrendo até o ultimo Vertice ... Não precisa validar pq o tam_Matriz = Grafo
+    for (i = 1; i < TamanhoMatriz; i++) 
+    {                                   
+        MatrizAdj[0][i] = Aux->numero;  
+        MatrizAdj[i][0] = Aux->numero;  
+        Aux = Aux->baixo;               
     }
 
-    // ========= AGORA É A PARTE QUE INSERE NA MATRIZ
-
-    // LEMBRETE: A MATRIZ COMEÇA DO 1,1 POIS O 0 e 0 É RESERVADO PARA OS INDICES (VERTICES)
-
-    item *AuxA;      // Para o Aux não perder referencia, vou criar AuxA (Aresta) para percorrer as arestas no Vertice indicado
-    Aux = L->inicio; // Setando novamente
+    item *AuxA;      
+    Aux = L->inicio; 
     int linha = 1, coluna;
 
-    //  EXPLICAÇÃO DA FUNÇÃO BUSCA LINHA ...
-    // 	 A entrada X da matriz não necessariamente é igual ao Y Vertice ... por isso preciso passar o numero
-    //   Y do vertice e pesquisar ele na matriz ... ai o retorno da matriz vai ser o indice X da Matriz.
-    // 	 Não precisa fazer isso para os vertices, porque estou sempre pegando eles sequencialmente então o vertice
-    //   Y sempre vai bater com a posição X da matriz.
-
-    while (Aux != NULL) // Pegando Todos Vertices do Grafo até NULL (Percorrendo na Vertical)
+    while (Aux != NULL) 
     {
-        if (Aux->prox != NULL) // So interessa quem tem aresta ... se não tiver não precisa fazer nada
+        if (Aux->prox != NULL) 
         {
-            AuxA = Aux->prox;    // AuxA vai ser o responsavel por percorrer na horizontal ... para Aux não perder referencia
-            while (AuxA != NULL) // Enquanto não achar NULL na horizontal (arestas) percorre ...
+            AuxA = Aux->prox;    
+            while (AuxA != NULL) 
             {
-                coluna = buscaLinha(AuxA->numero, TamanhoMatriz, TamanhoMatriz, MatrizAdj); // Explicado la em cima
-                MatrizAdj[linha][coluna] = AuxA->P_Aresta;                                  // Imprimindo o peso da aresta na matriz de adj
+                coluna = buscaLinha(AuxA->numero, TamanhoMatriz, TamanhoMatriz, MatrizAdj); 
+                MatrizAdj[linha][coluna] = AuxA->peso_aresta;                                  
                 AuxA = AuxA->prox;
             }
         }
         Aux = Aux->baixo;
         linha++;
-        // Como estou fazendo sequencialmente os Vertices Do grafo, não preciso fazer uma função BuscaColuna.
+        
     }
     printf("\n  Matriz de Adjacencia\n\n");
     printaMatriz(TamanhoMatriz, TamanhoMatriz, MatrizAdj);
-    FreeMatrizDinamica(TamanhoMatriz, MatrizAdj); // dar free na matriz
+    FreeMatrizDinamica(TamanhoMatriz, MatrizAdj); 
 }
 
-int **AlocaMatrizDinamica(int l, int c) // Função usada em "MatrizAdjacencia"
+int **AlocaMatrizDinamica(int l, int c) 
 {
     int i, j;
-    int **m = (int **)malloc(l * sizeof(int *)); //Aloca um Vetor de Ponteiros
+    int **m = (int **)malloc(l * sizeof(int *)); 
 
     for (i = 0; i < l; i++)
     {
-        m[i] = (int *)malloc(c * sizeof(int)); //Aloca um Vetor de Inteiros para cada posição do Vetor de Ponteiros.
+        m[i] = (int *)malloc(c * sizeof(int)); 
         for (j = 0; j < c; j++)
         {
-            m[i][j] = 0; //Inicializa com 0.
+            m[i][j] = 0; 
         }
     }
-    return m; // Retornando o Ponteiro para a Matriz Alocada
+    return m; 
 }
 
-int buscaLinha(int valor, int l, int c, int **M) // Função usada em "MatrizAdjacencia"
+int buscaLinha(int valor, int l, int c, int **M) 
 {
     int i;
     for (i = 1; i < l; i++)
     {
         if (M[i][0] == valor)
         {
-            return i; // retorna o indice da matriz baseado no valor informado ...
+            return i; 
         }
     }
-    return -1; // coloquei para n dar warning ... mas n precisa .. nunca vai cair aqui
+    return -1; 
 }
 
-void printaMatriz(int l, int c, int **matriz) // Função usada em "MatrizAdjacencia"
+void printaMatriz(int l, int c, int **matriz) 
 {
     int i, j;
     for (i = 0; i < l; i++)
@@ -485,34 +450,29 @@ void printaMatriz(int l, int c, int **matriz) // Função usada em "MatrizAdjace
         printf("  ");
         for (j = 0; j < c; j++)
         {
-            printf("%2d ", matriz[i][j]); // %2d para alinhar 2 a esquerda
+            printf("%2d ", matriz[i][j]); 
         }
         printf("\n");
     }
 }
 
-void FreeMatrizDinamica(int l, int **M) // Função usada em "MatrizAdjacencia"
+void FreeMatrizDinamica(int l, int **M) 
 {
     int i;
     for (i = 0; i < l; i++)
     {
-        free(M[i]); // como fiz uma matriz dinamica ... estou dando free nas linhas AQUI
+        free(M[i]); 
     }
-    free(M); // Dando free na Coluna AQUI
+    free(M); 
     M = NULL;
 }
 
-// =================================== FUNÇOES PARA BUSCA EM LARGURA ==========================================
-int Verifica_e_BuscaLargura(ListaDinamica *L, int Vinicio) // Função usada na "main" (cima)
-{
-    // CHECKLIST DE VERIFICAÇÃO DA BUSCA EM LARGURA                                 STATUS     RETURN
-    //      * VERIFICAR SE Vinicio EXISTE NO GRAFO                                    OK!       (-1)
-    //      * VERIFICAR SE O TAMANHO DO GRAFO É != O                                  OK!       (-2)
 
-    // --> COMEÇA AQUI A PARTE DE VERIFICAÇÂO ...
+int Verifica_e_BuscaLargura(ListaDinamica *L, int Vinicio) 
+{
     if (L->quantV == 0)
     {
-        return -2; // Return (-2) quer dizer que o grafo está vazio !!!
+        return -2; 
     }
 
     item *aux = L->inicio;
@@ -522,19 +482,19 @@ int Verifica_e_BuscaLargura(ListaDinamica *L, int Vinicio) // Função usada na 
         if (aux->numero == Vinicio)
         {
             cont++;
-            break; // Se achou não precisa continuar porque só pode ter um vertice igual para cada Grafo ...
+            break; 
         }
-        aux = aux->baixo; // Verificando na vertical (Vertices)
+        aux = aux->baixo; 
     }
 
-    if (cont == 0) // Se for igual a zero quer dizer que não achou o Vertice no Grafo ...
+    if (cont == 0) 
     {
-        return -1; // Return (-1) quer dizer que não achou o vertice Vinicio no Grafo L
+        return -1; 
     }
 
-    // --> TERMINA AQUI A PARTE DE VERIFICAÇÂO ...
+    
 
-    int **retorno; // retorno vai receber uma matriz ... onde tem o D/pi/cor
+    int **retorno; 
     retorno = BuscaEmLargura(L, Vinicio);
 
     FreeMatrizDinamica(3, retorno);
@@ -542,57 +502,71 @@ int Verifica_e_BuscaLargura(ListaDinamica *L, int Vinicio) // Função usada na 
     return 0;
 }
 
-int **BuscaEmLargura(ListaDinamica *L, int Vinicio) // Função usada em "Verifica_e_BuscaLargura"
+int **BuscaEmLargura(ListaDinamica *L, int Vinicio) 
 {
-    int tamGrafo = L->quantV; // TamGrafo é a quantidade de vertices que tem no grafo
+    int arrVerify[10] = {0};
+    arrVerify[0] = Vinicio;
+    int tamGrafo = L->quantV; 
 
-    int **matriz = AlocaMatrizDinamica(3, tamGrafo); // ONDE 0 --> D || 1 --> PI || 2 --> COR
+    int **matriz = AlocaMatrizDinamica(3, tamGrafo); 
     int i;
-    for (i = 0; i < tamGrafo; i++) // Inicializando os vetores com:
+    for (i = 0; i < tamGrafo; i++) 
     {
-        if(i == 10) continue;
-        matriz[1][i] = -1; // todos pais recebendo -1 ...
-        matriz[0][i] = -1; // todas as distancias recebendo -1 ...
-        matriz[2][i] = 0;  // todos recebendo cor BRANCA ...
-                           // BRANCO == 0
-                           // CINZA  == 1
-                           // PRETO  == 2
+        if(i == 10){
+            matriz[2][i] = 1;
+            continue;
+        }
+
+        matriz[1][i] = -1; 
+        matriz[0][i] = -1; 
+        matriz[2][i] = 0;  
+                           
+                           
+                           
+                           
     }
 
-    //  EXPLICAÇÃO DA FUNÇÃO INFORMA POSIÇÃO ...
-    // 	O vetor pi/d/cor começa no indice 0 e vai até Quantidade de Vertices do Grafo -1 ...
-    // 	Sabemos que o vetor dinamico e o Grafo tem o mesmo tamanho ... então estou procurando o indice do vertice do grafo no vetor dinamico ...
-    // 	Tambem preciso fazer isso pois não necessariamente meu Grafo tem vertices consecutivos (1,2,3,4,...), então preciso achar o indice X do Vertice.
+    
+    
+    
+    
 
-    int posicao = InformaPosicao(L, Vinicio); // Explicado acima ...
+    int posicao = InformaPosicao(L, Vinicio); 
 
-    // Estou setando o pi/d/cor do Vertice inicio que o usuario informou ...
+    
     matriz[1][posicao] = -1;
     matriz[0][posicao] = 0;
     matriz[2][posicao] = 1;
 
-    FilaDinamica Q; // Declarando FilaDinamica e setando os seus ponteiros para NULL e quant para 0
+    FilaDinamica Q; 
     Q.quant = 0;
     Q.inicio = NULL;
     Q.fim = NULL;
 
-    InsereFila(&Q, Vinicio); // colocando o vertice raiz (inicio) na Fila ...
+    InsereFila(&Q, Vinicio); 
 
     int u, v;
-    int posu, posv; // Explicado la em cima ...
+    int posu, posv; 
     item *aux;
-    while (Q.quant != 0) // Enquanto a Fila não estiver vazia .... faça:
+    while (Q.quant != 0) 
     {
         u = RemoveFila(&Q);
         posu = InformaPosicao(L, u);
-        aux = RetornaArestasDadoVertice(L, u); // Essa função vai receber o Vertice e buscar no grafo ele e retornar as arestas ...
-        while (aux != NULL)                    // Vai percorrer na horizontal até não achar mais arestas ...
+        aux = RetornaArestasDadoVertice(L, u); 
+        while (aux != NULL)                    
         {
             v = aux->numero;
             posv = InformaPosicao(L, v);
-            if (matriz[2][posv] == 0)
+            if (matriz[2][posv] == 0 || matriz[2][posv] == 3)
             {
-                matriz[2][posv] = 1;
+                for(int i = 0; i < 10; i ++){
+                    if(arrVerify[i] == 0){
+                        arrVerify[i] = aux->numero;
+                        break;
+                    }
+                }
+                matriz[2][posv] = 3;
+                matriz[0][posu] + 1;
                 matriz[0][posv] = matriz[0][posu] + 1;
                 matriz[1][posv] = u;
                 InsereFila(&Q, v);
@@ -607,9 +581,16 @@ int **BuscaEmLargura(ListaDinamica *L, int Vinicio) // Função usada em "Verifi
     printf("\n Vertice   d   Pai   Cor\n");
     for (i = 0; i < tamGrafo; i++)
     {
-        printf("   %2d     %2d   %2d   %2d\n", aux->numero, matriz[0][i], matriz[1][i], matriz[2][i]); // Cor não precisa ser printada ...
+        printf("   %2d     %2d   %2d   %2d\n", aux->numero, matriz[0][i], matriz[1][i], matriz[2][i]); 
         aux = aux->baixo;
     }
+    int count = 0;
+    for(int i = 0; i < 10; i ++){
+        if(arrVerify[i] != 0){
+            ++count;
+        }
+    }
+    printf("TAMANHO: %d\n", count);
     printf("\nOBS: Se (d) tiver um (-1) quer dizer que o Grafo nao e conexo !!!\n");
     printf("OBS: Se pai tiver mais que um (-1) quer dizer que o Grafo nao e conexo !!!\n");
     printf("OBS: Pai igual (-1) quer dizer que nao existe.\n");
@@ -617,121 +598,121 @@ int **BuscaEmLargura(ListaDinamica *L, int Vinicio) // Função usada em "Verifi
     return matriz;
 }
 
-item *RetornaArestasDadoVertice(ListaDinamica *L, int Vinicio) // Função usada em "BuscaEmLargura"
+item *RetornaArestasDadoVertice(ListaDinamica *L, int Vinicio) 
 {
     item *Aux = L->inicio;
-    while (Aux->numero != Vinicio) // forneço um vertice e ele vai dar as arestas desse vertice.
+    while (Aux->numero != Vinicio) 
     {
         Aux = Aux->baixo;
     }
-    return Aux->prox; // prox pois quero que ele retorne somente as arestas ...
+    return Aux->prox; 
 }
 
-int InformaPosicao(ListaDinamica *L, int Vinicio) // Função usada em "BuscaEmLargura"
+int InformaPosicao(ListaDinamica *L, int Vinicio) 
 {
     item *aux = L->inicio;
     int cont = 0;
-    // assumindo que Vinicio exista no grafo.
+    
     while (aux->numero != Vinicio)
-    { // não precisa validar se Vinicio existe no grafo pois ja estou validando isso antes de chamar essa função
+    { 
         cont++;
         aux = aux->baixo;
     }
-    return cont; // basicamente vou fornecer um vertice e ele vai contar a posição do 0 até ele.
+    return cont; 
 }
 
 void InsereFila(FilaDinamica *F, int value)
 {
-    // FILA: INSERE NO ULTIMO E RETIRA DO PRIMEIRO ... portanto ... INSERE NO ->FIM && RETIRA NO ->INICIO
+    
     fila *aux;
-    aux = malloc(sizeof(fila)); // Alocando dinamicamente
-    aux->numero = value;        // atribuindo o numero do Vertice para aux->numero
-    aux->prox = NULL;           // Atualizando ponteiro para NULL (Arestas)
+    aux = malloc(sizeof(fila)); 
+    aux->numero = value;        
+    aux->prox = NULL;           
 
-    if (F->quant == 0) // se a lista tiver vazia ... ponteiros inicio e fim vão ter o mesmo elemento ...
+    if (F->quant == 0) 
     {
         F->inicio = aux;
         F->fim = aux;
     }
-    else // se a lista não tiver vazia ... só inserir no ponteiro fim e atualizar ele depois
+    else 
     {
-        F->fim->prox = aux; // inserindo aux no final da fila
-        F->fim = aux;       // atualizando ponteiro fim para o aux (ultimo elemento da fila)
+        F->fim->prox = aux; 
+        F->fim = aux;       
     }
     F->quant++;
 }
 
 int RemoveFila(FilaDinamica *F)
 {
-    int valor;         // vou retornar o ->numero removido ...
-    if (F->quant != 0) // Se a fila estiver vazia não faz sentido tirar algo dela
+    int valor;         
+    if (F->quant != 0) 
     {
-        valor = F->inicio->numero; // retornar numero
+        valor = F->inicio->numero; 
         fila *aux;
-        if (F->quant == 1) // se tiver só um elemento vou dar free nele e depois criar uma nova lista ...
+        if (F->quant == 1) 
         {
             aux = F->inicio;
             free(aux);
             aux = NULL;
-            // Setando parametros pois estou criando uma "nova" lista
+            
             F->quant = 0;
             F->inicio = NULL;
             F->fim = NULL;
         }
-        else // se não tiver só um elemento é so vc retirar do ->inicio
+        else 
         {
-            aux = F->inicio;       // preciso fazer isso para dar free nele
-            F->inicio = aux->prox; // atualizando ponteiro inicio.
+            aux = F->inicio;       
+            F->inicio = aux->prox; 
             free(aux);
             aux = NULL;
             F->quant--;
         }
     }
-    return valor; // retornando o valor do item retirado ... estou usando isso na função "BuscaEmLargura"
+    return valor; 
 }
 
-// ===================================== FUNÇOES PARA VERTICE ===============================================
-int InserirVertice(ListaDinamica *L, int n) // Função usada na "main"
-{                                           // CHECKLIST DE VERIFICAÇÃO DE VERTICES    STATUS     RETURN
-    //      * NÃO PODE TER VERTICES IGUAIS                                               OK!       (-1)
-    //      * PODE TER VERTICE NEGATIVO || Resp: Sim mas n precisa validar               OK!       (--)
 
-    // --> COMEÇA AQUI A PARTE DE VERIFICAÇÂO ...
-    item *aux;          // Criando variavel aux para percorrer o Grafo
-    if (L->quantV != 0) // Se QuantV for 0 ... certamente o numero que o usuario informou não tem no grafo então não precisa validar e pode adicionar ele direto.
-    {                   // Se QuantV != 0 ... então precisa validar se n tem no grafo ou não.
+int InserirVertice(ListaDinamica *L, int n) 
+{                                           
+    
+    
+
+    
+    item *aux;          
+    if (L->quantV != 0) 
+    {                   
         int i;
-        aux = L->inicio;                // Setando aux para o Ponteiro inicio do Vertice
-        for (i = 0; i < L->quantV; i++) // Vai percorrer a Lista inteira para ver se acha um vertice igual o informado
+        aux = L->inicio;                
+        for (i = 0; i < L->quantV; i++) 
         {
-            if (aux->numero == n) // Se ele achar um n ja existente no grafo vai retornar -1 (ERRO)
+            if (aux->numero == n) 
             {
                 return -1;
             }
-            aux = aux->baixo; // Atualizando o aux para baixo (vertice) para ele conseguir percorrer o grafo
+            aux = aux->baixo; 
         }
     }
-    // --> TERMINA AQUI A PARTE DE VERIFICAÇÂO ...
+    
 
-    aux = NovoVert(n);              // chamando função que cria um item e seta valor e atualiza ponteiros para NULL
-    InserirVerticeOrdenado(L, aux); // Chamando função que insere Vertice
-    return 1;                       // Se chegou até aqui é porque deu tudo CERTO !!!
+    aux = NovoVert(n);              
+    InserirVerticeOrdenado(L, aux); 
+    return 1;                       
 }
 
-void InserirPrimeiroVertice(ListaDinamica *L, item *c) // Usada na função "InserirVerticeOrdenado"
+void InserirPrimeiroVertice(ListaDinamica *L, item *c) 
 {
-    L->quantV++; // Acrescentando quantidade relativo aos Vertices
+    L->quantV++; 
     c->baixo = L->inicio;
-    L->inicio = c; // Atualizando ponteiro L->inicio para o Vertice C
+    L->inicio = c; 
 }
 
-void InserirFimVertice(ListaDinamica *L, item *c) // Usada na função "InserirVerticeOrdenado"
+void InserirFimVertice(ListaDinamica *L, item *c) 
 {
-    //OBS: NÃO VALIDEI POS=0 POIS O CODIGO INTEIRO JA ESTA FAZENDO ESSA VALIDACAO ... MAS SE FOR USAR ESSA FUNCAO COLOQUE
-    int pos = L->quantV; // Como vai adicionar no fim da lista ... Só pegar a ultima posição da lista pelo QuantV
+    
+    int pos = L->quantV; 
     int cont = 0;
-    item *aux = L->inicio;   // atualizando aux para inicio da lista
-    while (cont < (pos - 1)) // percorrendo a lista até o ultimo item
+    item *aux = L->inicio;   
+    while (cont < (pos - 1)) 
     {
         aux = aux->baixo;
         cont++;
@@ -741,35 +722,35 @@ void InserirFimVertice(ListaDinamica *L, item *c) // Usada na função "InserirV
     L->quantV++;
 }
 
-void InserirVerticeOrdenado(ListaDinamica *L, item *C) // Usada na função "Inserir Vertice" (cima)
+void InserirVerticeOrdenado(ListaDinamica *L, item *C) 
 {
-    item *aux = L->inicio; // criando o aux pois ele vai fazer o papel de um L->fim
-    if (L->quantV != 0)    // se a lista esta vazia não precisa percorrer ela
+    item *aux = L->inicio; 
+    if (L->quantV != 0)    
     {
-        while (aux->baixo != NULL) // loop responsavel por pegar o ultimo item da lista vertice
+        while (aux->baixo != NULL) 
         {
             aux = aux->baixo;
         }
-    } // para inserir no fim isso ...
+    } 
 
-    if (L->inicio == NULL) // Se tiver vazia a lista
+    if (L->inicio == NULL) 
     {
         InserirPrimeiroVertice(L, C);
     }
 
-    else if (C->numero < L->inicio->numero) // Só tem numero grande e o numero dado é pequeno ... insere no inicio da lista
+    else if (C->numero < L->inicio->numero) 
     {
         InserirPrimeiroVertice(L, C);
     }
 
-    else if (C->numero > aux->numero) // Se o numero que vc quer inserir é maior que todos da lista .. insere no fim.
+    else if (C->numero > aux->numero) 
     {
         InserirFimVertice(L, C);
     }
 
-    else // numero está entre o inicio e fim da lista.
+    else 
     {
-        item *auxa, *auxd; // Aux_Antes e Aux_Depois para comparar
+        item *auxa, *auxd; 
         auxa = L->inicio;
         auxd = auxa->baixo;
         while (auxd->numero < C->numero)
@@ -783,24 +764,24 @@ void InserirVerticeOrdenado(ListaDinamica *L, item *C) // Usada na função "Ins
     }
 }
 
-item *NovoVert(int value) // Usada na função "Inserir Vertice"
+item *NovoVert(int value) 
 {
     item *aux;
-    aux = malloc(sizeof(item)); // Alocando dinamicamente
-    aux->numero = value;        // atribuindo o numero do Vertice para aux->numero
-    aux->P_Aresta = -1;         // -1 para (não existe)
-    aux->prox = NULL;           // Atualizando ponteiro para NULL (Arestas)
-    aux->baixo = NULL;          // Atualizando ponteiro para NULL (vertices)
+    aux = malloc(sizeof(item)); 
+    aux->numero = value;        
+    aux->peso_aresta = -1;         
+    aux->prox = NULL;           
+    aux->baixo = NULL;          
     return aux;
 }
 
-item *NovaAresta(int value, int peso) // Usada na Função "VerificaAresta"
+item *NovaAresta(int value, int peso) 
 {
     item *aux;
-    aux = malloc(sizeof(item)); // Alocando dinamicamente
-    aux->numero = value;        // Atribuindo o numero do Vertice para aux->numero
-    aux->P_Aresta = peso;       // Atribuindo o peso da aresta
-    aux->prox = NULL;           // Atualizando ponteiro para NULL (Arestas)
-    aux->baixo = NULL;          // Atualizando ponteiro para NULL (Vertices)
+    aux = malloc(sizeof(item)); 
+    aux->numero = value;        
+    aux->peso_aresta = peso;      
+    aux->prox = NULL;           
+    aux->baixo = NULL;          
     return aux;
 }
